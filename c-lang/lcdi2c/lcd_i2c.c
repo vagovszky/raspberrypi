@@ -66,7 +66,15 @@ void lcd_i2c_gotoxy(lcd_i2c_t *lcd, uint8_t x, uint8_t y)
 {
     // note: on two line devices, second line begins at address 0x40
     // XXX so this will work with 1 and 2 line devices, but probabaly not with 4.
-    LCD_I2C_SET_DD_RAM_ADDRESS( lcd,  y*0x40 + x  );
+    if(y==1){
+        LCD_I2C_SET_DD_RAM_ADDRESS( lcd,  0x40 + x  );
+    }else if(y==2){
+        LCD_I2C_SET_DD_RAM_ADDRESS( lcd,  0x14 + x  );
+    }else if(y==3){
+        LCD_I2C_SET_DD_RAM_ADDRESS( lcd,  0x54 + x  );
+    }else{
+        LCD_I2C_SET_DD_RAM_ADDRESS( lcd,  0x00 + x  );
+    }
     lcd->x=x;
     lcd->y=y;
 }
