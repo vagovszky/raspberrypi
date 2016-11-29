@@ -50,4 +50,6 @@ if(!$mqttResponseReceived){
   echo json_encode($response);
 }
 
+$client->unsubscribe($config['http_listener']['mqtt_response_topic']);
+$client->loop();
 $client->disconnect();
