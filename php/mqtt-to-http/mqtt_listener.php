@@ -1,8 +1,9 @@
 <?php
 set_time_limit(0);
+$config = require(__DIR__ . '/config.php');
 
 $client = new Mosquitto\Client($config['mqtt_listener']['client_name']);
-$client->setCredentials($config['mqtt_listener']['mqtt_user'], $config['mqtt_listener']['mqtt_user']);
+$client->setCredentials($config['mqtt_listener']['mqtt_user'], $config['mqtt_listener']['mqtt_password']);
 
 $client->onConnect(function($code, $message){
   if($code != 0){
@@ -11,7 +12,7 @@ $client->onConnect(function($code, $message){
 });
 
 $client->onMessage(function($message)use($config) {
-  $message = implode('&',(array) json_decode($message->payload));
+  $message = http_build_query((array) json_decode($message->payload));
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $config['mqtt_listener']['thingspeak_url']);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
